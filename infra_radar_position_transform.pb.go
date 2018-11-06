@@ -4,8 +4,10 @@
 package infra_radar_transform
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
 	math "math"
 )
 
@@ -136,4 +138,76 @@ var fileDescriptor_00baa78599dec102 = []byte{
 	0xe4, 0xbe, 0xf7, 0x36, 0x34, 0xf3, 0x17, 0xb6, 0x37, 0x68, 0xe2, 0x17, 0xe2, 0x5f, 0x7d, 0xe2,
 	0xef, 0xc7, 0xb3, 0x62, 0x73, 0x30, 0x5e, 0x9c, 0x6f, 0xbd, 0xee, 0x76, 0xfe, 0x16, 0x3f, 0x01,
 	0x00, 0x00, 0xff, 0xff, 0x16, 0xba, 0xec, 0xff, 0xc1, 0x01, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// InfraRadarPositionTransformClient is the client API for InfraRadarPositionTransform service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type InfraRadarPositionTransformClient interface {
+	Transform(ctx context.Context, in *TransformRequest, opts ...grpc.CallOption) (*TransformResponse, error)
+}
+
+type infraRadarPositionTransformClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewInfraRadarPositionTransformClient(cc *grpc.ClientConn) InfraRadarPositionTransformClient {
+	return &infraRadarPositionTransformClient{cc}
+}
+
+func (c *infraRadarPositionTransformClient) Transform(ctx context.Context, in *TransformRequest, opts ...grpc.CallOption) (*TransformResponse, error) {
+	out := new(TransformResponse)
+	err := c.cc.Invoke(ctx, "/infra_radar_transform.InfraRadarPositionTransform/transform", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// InfraRadarPositionTransformServer is the server API for InfraRadarPositionTransform service.
+type InfraRadarPositionTransformServer interface {
+	Transform(context.Context, *TransformRequest) (*TransformResponse, error)
+}
+
+func RegisterInfraRadarPositionTransformServer(s *grpc.Server, srv InfraRadarPositionTransformServer) {
+	s.RegisterService(&_InfraRadarPositionTransform_serviceDesc, srv)
+}
+
+func _InfraRadarPositionTransform_Transform_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransformRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InfraRadarPositionTransformServer).Transform(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infra_radar_transform.InfraRadarPositionTransform/Transform",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InfraRadarPositionTransformServer).Transform(ctx, req.(*TransformRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _InfraRadarPositionTransform_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "infra_radar_transform.InfraRadarPositionTransform",
+	HandlerType: (*InfraRadarPositionTransformServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "transform",
+			Handler:    _InfraRadarPositionTransform_Transform_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "infra_radar_position_transform.proto",
 }

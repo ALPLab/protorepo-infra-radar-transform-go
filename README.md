@@ -1,1 +1,0 @@
-# protorepo-infra-radar-transform-go
